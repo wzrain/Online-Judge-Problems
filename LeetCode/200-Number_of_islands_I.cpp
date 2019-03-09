@@ -1,3 +1,4 @@
+// BFS 
 class Solution {
 public:
   int numIslands(vector<vector<char>>& grid) {
@@ -32,6 +33,38 @@ public:
         }
         cnt++;
       } 
+    }
+    return cnt;
+  }
+};
+
+// DFS
+class Solution {
+public:
+  //int dir[4][2] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+  int dir[5] = {0, 1, 0, -1, 0};
+  void dfs(int i, int j, vector<vector<char>>& grid) {    
+    int row = grid.size(), col = grid[0].size();
+    if (i < 0 || i >= row ||
+        j < 0 || j >= col ||
+        grid[i][j] == '0'){
+      return;
+    }
+    grid[i][j] = '0';
+    for (int d = 0; d < 4; ++d) {
+      //dfs(i + dir[d][0], j + dir[d][1], grid);
+      dfs(i + dir[d], j + dir[d + 1], grid);
+    }
+  }
+  int numIslands(vector<vector<char>>& grid) {
+    if (grid.empty()) return 0;
+    int row = grid.size(), col = grid[0].size(), cnt = 0;
+    for (int i = 0; i < row; ++i) {
+      for (int j = 0; j < col; ++j) {
+        if (grid[i][j] == '0') continue;
+        dfs(i, j, grid);
+        cnt++;
+      }
     }
     return cnt;
   }
