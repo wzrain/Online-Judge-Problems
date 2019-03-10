@@ -15,7 +15,7 @@ public:
     };
     priority_queue<building, vector<building>, decltype(cmp)> bpq(cmp);
     //The element of the priority queue can actually be only a pair of <height, right>.
-     
+
     for (int i = 0; i < buildings.size(); ++i) {     
       while (!bpq.empty() && buildings[i][0] > next_pos) {
         while(!bpq.empty() && next_pos >= bpq.top().right) bpq.pop();
@@ -54,32 +54,70 @@ public:
 };
 
 // divide and conquer
-class Solution {
+class Solution_DC {
 public:
   int Max(int a, int b) {
     return a > b ? a : b;
   }
-  vector<pair<int, int>> getPartSkyline(vector<vector<int>>& part) {
-    if (part.size() == 1) {
+  vector<pair<int, int>> getPartSkyline(vector<vector<int>>& part, int low, int high) {
+    if (low > high) return {};
+    if (low == high) {
       vector<pair<int, int>> res1;
-      res1.push_back(make_pair(part[0][0], part[0][2]));
-      res1.push_back(make_pair(part[0][1], 0));
+      res1.push_back(make_pair(part[low][0], part[low][2]));
+      res1.push_back(make_pair(part[low][1], 0));
       return res1;
     }
-    int mid = part.size() / 2;
-    vector<vector<int>> left_points(part.begin(), part.begin() + mid);
-    vector<vector<int>> right_points(part.begin() + mid, part.end())
-    vector<vector<int>> left = getPartSkyline(left_points);
-    vector<vector<int>> right = getPartSkyline(right_points);
-    vector<vector<int>> res;
-    int ml = 1, mr = 0, ch = left[0][1];
-    res.push_back()
-    while (ml != left.size() || m2 != right.size()) {
-      if (left[m1])
+    int mid = (low + high) / 2;
+    vector<pair<int, int>> left = getPartSkyline(part, low, mid);
+    vector<pair<int, int>> right = getPartSkyline(part, mid + 1, high);
+    vector<pair<int, int>> res;
+    int ml = 0, mr = 0, cur_h = -1, tmp_h;
+    while (ml != left.size() || mr != right.size()) {
+      if (ml == left.size()) {
+        while (mr != right.size()) {
+          res.push_back(right[mr++]);
+        }
+        break;
+      }
+      if (mr == right.size()) {
+        while (ml != left.size()) {
+          res.push_back(left[ml++]);
+        }
+        break;
+      }
+      if (left[ml].first == right[mr].first) {
+        tmp_h = Max(left[ml].second, right[mr].second);
+        if (tmp_h != cur_h){
+          res.push_back(make_pair(left[ml].first, tmp_h));
+        }
+        ml++;
+        mr++;
+      }
+      else if (left[ml].first < right[mr].first) {
+        if (mr == 0) {
+          tmp_h = left[ml].second;
+          res.push_back(make_pair(left[ml].first, left[ml].second));
+        }
+        else {
+          tmp_h = Max(left[ml].second, right[mr - 1].second);
+          if (tmp_h != cur_h) {
+            res.push_back(make_pair(left[ml].first, tmp_h));
+          }
+        }
+        ml++;
+      }
+      else  {
+        tmp_h = Max(left[ml - 1].second, right[mr].second);
+        if (tmp_h != cur_h) {
+          res.push_back(make_pair(right[mr].first, tmp_h));
+        }
+        mr++;
+      }
+      cur_h = tmp_h;
     }
+    return res;
   }
   vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
-    std::vector<std::pair<int, int>> res;
-    return res;
+    return getPartSkyline(buildings, 0, buildings.size() - 1);
   }
 };
