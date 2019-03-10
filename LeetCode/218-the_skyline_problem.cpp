@@ -1,64 +1,53 @@
 // priority queue
-class Solution {
+class Solution_PQ {
 public:
   struct building {
     int idx, left, right, height;
     building(int i, int l, int r, int h) : idx(i), left(l), right(r), height(h) {}
   };
   vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
-    int cur_pos, cur_h = 0;
+    int next_pos = -1, cur_h = 0;
     vector<pair<int, int>> res;
-    unordered_set<int> poped_building;
-    auto cmp = [](building b1, building b2) {return b1.right >= b2.right;};
+    
+    auto cmp = [](building b1, building b2) {
+      if (b1.height == b2.height) return b1.right <= b2.right;
+      return b1.height < b2.height;
+    };
     priority_queue<building, vector<building>, decltype(cmp)> bpq(cmp);
-    auto cmp2 = [](building b1, building b2) {return b1.height <= b2.height;};
-    priority_queue<building, vector<building>, decltype(cmp2)> hq(cmp2);
-    for (int i = 0; i < buildings.size(); ++i) {
-      cur_pos = buildings[i][0];
-      while (!bpq.empty() && cur_pos > bpq.top().right){ 
-        poped_building.insert(bpq.top().idx);
-        while (!hq.empty() && poped_building.find(hq.top().idx) != poped_building.end()) {
-          hq.pop();
+    //The element of the priority queue can actually be only a pair of <height, right>.
+     
+    for (int i = 0; i < buildings.size(); ++i) {     
+      while (!bpq.empty() && buildings[i][0] > next_pos) {
+        while(!bpq.empty() && next_pos >= bpq.top().right) bpq.pop();
+        if (bpq.empty()) cur_h = 0;
+        else cur_h = bpq.top().height;
+        if (res.size() && res.back().first == next_pos && res.back().second > cur_h) {
+          res.back().second = cur_h;
         }
-        if (hq.empty()) cur_h = 0;
-        else cur_h = hq.top().height;
-        if (bpq.top().height > cur_h) {
-          if (res.size() && res[res.size() - 1].first == bpq.top().right 
-                          && res[res.size() - 1].second > cur_h) {
-            res[res.size() - 1].second = cur_h;
-          }
-          else res.push_back(make_pair(bpq.top().right, cur_h));
-        }
-        
-        bpq.pop();
+        else res.push_back(make_pair(next_pos, cur_h));
+        if (!bpq.empty()) next_pos = bpq.top().right;
       }
-      if (cur_h < buildings[i][2]) {
-        cur_h = buildings[i][2];
-        if (res.size() && res[res.size() - 1].first == buildings[i][0] 
-                        && res[res.size() - 1].second < buildings[i][2]) {
-          res[res.size() - 1].second = buildings[i][2];
+      if (buildings[i][2] > cur_h) {
+        if (res.size() && res.back().first == buildings[i][0] 
+                       && res.back().second < buildings[i][2]){
+          res.back().second = buildings[i][2];
         }
         else res.push_back(make_pair(buildings[i][0], buildings[i][2]));
       }
+      
       bpq.push(building(i, buildings[i][0], buildings[i][1], buildings[i][2]));
-      hq.push(building(i, buildings[i][0], buildings[i][1], buildings[i][2]));
+      next_pos = bpq.top().right;
+      cur_h = bpq.top().height;
     }
-    while (!bpq.empty()){ 
-      poped_building.insert(bpq.top().idx);
-      while (!hq.empty() && poped_building.find(hq.top().idx) != poped_building.end()) {
-        hq.pop();
+    while (!bpq.empty()) { 
+      while(!bpq.empty() && next_pos >= bpq.top().right) bpq.pop();
+      if (bpq.empty()) cur_h = 0;
+      else cur_h = bpq.top().height;
+      if (res.size() && res.back().first == next_pos && res.back().second > cur_h) {
+        res.back().second = cur_h;
       }
-      if (hq.empty()) cur_h = 0;
-      else cur_h = hq.top().height;
-      if (bpq.top().height > cur_h) {
-        if (res.size() && res[res.size() - 1].first == bpq.top().right 
-                          && res[res.size() - 1].second > cur_h) {
-            res[res.size() - 1].second = cur_h;
-          }
-          else res.push_back(make_pair(bpq.top().right, cur_h));
-      }
-
-      bpq.pop();
+      else res.push_back(make_pair(next_pos, cur_h));
+      if (!bpq.empty()) next_pos = bpq.top().right;
     }
     return res;
   }
