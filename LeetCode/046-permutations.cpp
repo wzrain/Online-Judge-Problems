@@ -1,4 +1,5 @@
-class Solution {
+// DFS
+class Solution_0 {
 public:
   vector<vector<int>> permute(vector<int>& nums) {
     if (nums.size() == 0) return {};
@@ -13,6 +14,33 @@ public:
         res.push_back(tmp[j]);
       }
     }
+    return res;
+  }
+};
+
+// backtrack
+// The previous solution needs no backtracking
+// because every recursion step a copy of the original vector
+// is created, so the original vector will not be modified.
+// If we create a copy "tmp" for every step as is shown 
+// in the comment below, there's no need of backtracing as well.
+class Solution_1 {
+public:
+  void per(vector<int>& nums, int idx, vector<vector<int>>& res) {
+    if (idx == nums.size()) {
+      res.push_back(nums);
+      return;
+    }
+    for (int i = idx; i < nums.size(); ++i) {
+      swap(nums[i], nums[idx]);
+      //vector<int> tmp(nums.begin(), nums.end());
+      per(nums, idx + 1, res);
+      swap(nums[i],nums[idx]);
+    }
+  }
+  vector<vector<int>> permute(vector<int>& nums) {
+    vector<vector<int>> res;
+    per(nums, 0, res);
     return res;
   }
 };
