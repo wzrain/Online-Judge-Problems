@@ -47,7 +47,7 @@ public:
 };
 
 // let the character num match, check the length
-class Solution {
+class Solution_2 {
 public:
   vector<int> findAnagrams(string s, string p) {
     if (s.length() < p.length()) return {};
@@ -74,6 +74,27 @@ public:
         }
         l++;
       }
+    }
+    return res;
+  }
+};
+
+// set the length, check whether the characters match.
+class Solution_3 {
+public:
+  vector<int> findAnagrams(string s, string p) {
+    if (s.length() < p.length()) return {};
+    vector<int> res;
+    vector<int> pv(26, 0), sv(26, 0);
+    for (int i = 0; i < p.length(); ++i) {
+      sv[s[i] - 'a']++;
+      pv[p[i] - 'a']++;
+    }
+    if (sv == pv) res.push_back(0);
+    for (int i = p.length(); i < s.length(); ++i) {
+      sv[s[i] - 'a']++;
+      sv[s[i - p.length()] - 'a']--;
+      if (sv == pv) res.push_back(i - p.length() + 1);
     }
     return res;
   }
