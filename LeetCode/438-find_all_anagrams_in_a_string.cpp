@@ -1,4 +1,5 @@
-class Solution {
+// If there's on single mismatch, narrow or leap the window.
+class Solution_1 {
 public:
   vector<int> findAnagrams(string s, string p) {
     if (s.length() < p.length()) return {};
@@ -40,6 +41,39 @@ public:
     }
     if (!cnt) {
       res.push_back(l);
+    }
+    return res;
+  }
+};
+
+// let the character num match, check the length
+class Solution {
+public:
+  vector<int> findAnagrams(string s, string p) {
+    if (s.length() < p.length()) return {};
+    vector<int> res;
+    unordered_map<char, int> ps;
+    for (int i = 0; i < p.length(); ++i) {
+      if (ps.find(p[i]) == ps.end()) ps[p[i]] = 1;
+      else ps[p[i]]++;
+    }
+    int l = 0, r = 0, cnt = ps.size();
+    while (r < s.length()) {
+      if (ps.find(s[r]) != ps.end()) {
+        ps[s[r]]--;
+        if (!ps[s[r]]) cnt--;
+      }
+      ++r;
+      while (!cnt) {
+        if (r - l == p.length()) {
+          res.push_back(l);
+        }
+        if (ps.find(s[l]) != ps.end()) {
+          if (!ps[s[l]]) cnt++;
+          ps[s[l]]++;
+        }
+        l++;
+      }
     }
     return res;
   }
