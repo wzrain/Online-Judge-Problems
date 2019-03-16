@@ -36,8 +36,20 @@ bool isCBT() {
   return true;
 }
 
+bool isCBT2() {
+  while(head != rear) {
+    int lc = l[q[head]], rc = r[q[head]];
+    if (lc) q[rear++] = lc;
+    else return rear == n;
+    if (rc) q[rear++] = rc;
+    else return rear == n;
+    head++;
+  }
+  return true;
+}
+
 void solve() {
-  if (isCBT()) printf("%c", 'Y');
+  if (isCBT2()) printf("%c", 'Y');
   else printf("%c", 'N');
 }
 
