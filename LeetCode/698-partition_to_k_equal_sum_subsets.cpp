@@ -27,7 +27,8 @@ public:
 
 // quicker backtrack solution(still wondering why)
 // visited indicates the used numbers.
-// still wondering why the pruning from 416 can't be used here.'
+// the pruning in 416 is actually trying to get a minimum value as quickly as possible
+// that it can' t be stopped by "visited". So invalid here.
 class Solution {
 public:
   bool dfs(vector<int>& nums, int idx, int k, int target, int sum, vector<int>& visited) {
