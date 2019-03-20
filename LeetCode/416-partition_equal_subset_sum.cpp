@@ -86,3 +86,29 @@ public:
     return dfs(nums, sum - nums[idx], idx + 1) || dfs(nums, sum, idx + 1);
   }
 };
+
+// A new dp solution. Idea from multiple knapsack problem.
+class Solution_dp2 {
+public:
+  bool canPartition(vector<int>& nums) {
+    int sum = 0;
+    for (int i = 0; i < nums.size(); ++i) sum += nums[i];
+    if (sum & 1) return false;
+    int half = sum / 2;
+    vector<int> dp(half + 1, 0);
+    vector<int> cnt(half + 1, 0);
+    dp[0] = 1;
+    for (int i = 0; i < nums.size(); ++i) {
+      for (int h = 1; h <= half; ++h) {
+        if (dp[half]) return true;
+        cnt[h] = 0;
+        if (dp[h]) continue;
+        if (h >= nums[i] && dp[h - nums[i]] && !cnt[h - nums[i]]) {
+          dp[h] = 1;
+          cnt[h] = 1;
+        }
+      }
+    }
+    return dp[half];
+  }
+};
