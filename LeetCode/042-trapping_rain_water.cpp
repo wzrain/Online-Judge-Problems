@@ -1,5 +1,5 @@
 // maintain a monotonous stack
-class Solution {
+class Solution_1 {
 public:
   int trap(vector<int>& height) {
     int r = 0, res = 0;
@@ -15,6 +15,20 @@ public:
         }
       }
       q.push_back(i);
+    }
+    return res;
+  }
+};
+
+// two pointers
+class Solution_2 {
+public:
+  int trap(vector<int>& height) {
+    int l = 0, r = height.size() - 1, res = 0;
+    while (l < r) {
+      int h = height[l] < height[r] ? height[l] : height[r];
+      while (l < r && height[l] <= h) res += (h - height[l++]);
+      while (l < r && height[r] <= h) res += (h - height[r--]);
     }
     return res;
   }
