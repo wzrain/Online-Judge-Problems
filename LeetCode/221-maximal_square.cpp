@@ -104,9 +104,7 @@ public:
   int maximalSquare(vector<vector<char>>& matrix) {
     if (matrix.empty()) return 0;
     int r = matrix.size(), c = matrix[0].size();
-    vector<vector<vector<int>>> dp(r, vector<vector<int>>(r, vector<int>(2, 0)));
     vector<vector<int>> rowsum(r, vector<int>(c, 0));
-    
     for (int i = 0; i < r; ++i) {
       for (int j = 0; j < c; ++j) {
         rowsum[i][j] = matrix[i][j] - '0';
