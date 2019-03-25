@@ -15,3 +15,23 @@ public:
     return res;
   }
 };
+
+// record the last index where a character appeared
+// if the current character's last index is larger than 
+// the left index of the sliding window, there occurs duplicates.
+class Solution {
+public:
+  int lengthOfLongestSubstring(string s) {
+    int res = 0, left = 0;
+    vector<int> st(200, -1);
+    for (int i = 0; i < s.length(); ++i) {
+      if (st[s[i]] >= left) {
+        if (res < i - left) res = i - left;
+        left = st[s[i]] + 1;
+      }
+      st[s[i]] = i;
+    }
+    if (res < s.length() - left) res = s.length() - left;
+    return res;
+  }
+};
