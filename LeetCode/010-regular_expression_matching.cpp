@@ -20,6 +20,14 @@ public:
           if (isMatch(s.substr(i + 1, s.length() - i - 1), p.substr(2, p.length() - 2))) return true;
         }
         return false;
+        // this situation can be simplified as follows:
+        /*
+         * return isMatch(s, p.substr(2, p.length() - 2)) ||
+         *        isMatch(s.substr(1, s.length() - 1), p)    // The current character is matched by the a*(or .*) pattern.
+         *                                                   // Since this pattern can be ignored using the previous line,
+         *                                                   // we can just find out whether there is more to match 
+         *                                                   // by seeing where this pattern will be ignored.
+         */
       }           
     }
     else if (p.length() > 1 && p[1] == '*') return isMatch(s, p.substr(2, p.length() - 2));
