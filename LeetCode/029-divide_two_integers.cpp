@@ -39,6 +39,22 @@ public:
     //   ele = -1;
     //   tmp = divisor;
     // }
+    /*
+     * In the previous two-loop solution, after the first loop, 
+     * the dividend(here assume the value are all positive for convenience) 
+     * is no greater than divisor * (1 + 2 + ... + 2 ^ n) where divisor * 2 ^ (n + 1) == tmp
+     * because dividend < tmp = divisor * (1 + 2 + ... + 2 ^ n) - 1.
+     * So the add sequence is like 1 + 2 + ... + 2 ^ k + 2 ^ k + ... + 2 + 1.
+     * While this solution is like 1 + 2 + ... + 2 ^ k + 1 + 2 + ... + 2 ^ m + 1 ...
+     * So if the answer is like 1 + 2 + 4 + ... 2 ^ k, Then this solution needs no more
+     * execution, but the previous solution still have to calculate tmp >>= 1 and 
+     * ele >>= 1 until tmp == divisor.
+     * If the answer is like 1 + 2 + 4 + ... + 2 ^ k + 2 ^ k, this solution will 
+     * calculate a lot of 1 + 2 + ... to fill that extra 2 ^ k, but the previous solution
+     * will just add 2 ^ k and break.
+     * However if there are remainders, the previous solution will still have to calculate
+     * until tmp == divisor.  
+     */
     if (mark == -1) return res;
     if (res == INT_MIN && mark == 1) return INT_MAX;
     return -res;
