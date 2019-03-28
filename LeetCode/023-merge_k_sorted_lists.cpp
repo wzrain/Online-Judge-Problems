@@ -82,3 +82,30 @@ public:
     return head->next;
   }
 };
+
+// recursive divide & conquer solution
+// actually the process of merge sort
+class Solution {
+public:
+  ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    if (!l1) return l2;
+    if (!l2) return l1;
+    if (l1->val < l2->val) {
+      l1->next = mergeTwoLists(l1->next, l2);
+      return l1;
+    }
+    l2->next = mergeTwoLists(l1, l2->next);
+    return l2;
+  }
+  ListNode* mergeKLists(vector<ListNode*>& lists) {
+    if (lists.empty()) return NULL;
+    if (lists.size() == 1) return lists[0];
+    vector<ListNode*> ls1, ls2;
+    for (int i = 0; i < lists.size(); ++i) {
+      if (i < lists.size() / 2) ls1.push_back(lists[i]);
+      else ls2.push_back(lists[i]);
+    }
+    ListNode* l1 = mergeKLists(ls1), *l2 = mergeKLists(ls2);
+    return mergeTwoLists(l1, l2);
+  }
+};
