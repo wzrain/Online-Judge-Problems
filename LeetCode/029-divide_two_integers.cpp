@@ -27,6 +27,18 @@ public:
         res += ele;
       }
     }
+    // an alternative for the previous two loops:
+    // while (dividend <= tmp) {
+    //   while (dividend <= tmp) {
+    //     res += ele;
+    //     dividend -= tmp;
+    //     if (tmp < INT_MIN - tmp) break;
+    //     tmp += tmp;
+    //     ele += ele;
+    //   }
+    //   ele = -1;
+    //   tmp = divisor;
+    // }
     if (mark == -1) return res;
     if (res == INT_MIN && mark == 1) return INT_MAX;
     return -res;
