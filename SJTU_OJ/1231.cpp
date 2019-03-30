@@ -39,8 +39,21 @@ void solve() {
   printf("%d", x);
 }
 
+int lca(int rt) {
+  if (!rt || rt == x || rt == y) return rt;
+  int lf = lca(l[rt]), rg = lca(r[rt]);
+  if (lf && rg) return rt;
+  if (!lf) return rg;
+  return lf;
+}
+
+void solveRecur() {
+  printf("%d", lca(root));
+}
+
 int main() {
   init();
-  solve();
+  //solve();
+  solveRecur();
   return 0;
 }
