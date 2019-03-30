@@ -28,7 +28,7 @@ public:
 class Solution {
 public:
   int combinationSum4(vector<int>& nums, int target) {
-    vector<unsigned long long> dp(target + 1, 0);
+    vector<unsigned int> dp(target + 1, 0);
     dp[0] = 1;
     for (int j = 1; j <= target; ++j) {
       for (int i = 0; i < nums.size(); ++i) {
@@ -38,5 +38,37 @@ public:
       }
     }
     return dp[target];
+  }
+};
+
+// recursive top-down solution
+// Use -1 instead of 0 to indicate the unsearched results 
+// since there might be a lot of unreachable values.
+// For every value tgt, we go through all the possibilities
+// that might sum up to tgt because of the 0~nums.size()-1
+// loop, AND every time we called this function to calculate
+// the number corresponding to tgt the function does exactly
+// the same thing, so it's ok to store the results.
+// This is the whole point of MEMOIZATION.
+// By the way the reason why this solution encountered no overflow
+// as the last one did is that this solution will not go check 
+// those with vast number of combinations but unreachable values.
+class Solution {
+public:
+  int dfs(vector<int>& nums, int tgt, vector<int>& mp) {
+    if (mp[tgt] != -1) return mp[tgt];
+    int res = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+      if (tgt < nums[i]) continue;
+      res += dfs(nums, tgt - nums[i], mp);
+    }
+    mp[tgt] = res;
+    return mp[tgt];
+  }
+  int combinationSum4(vector<int>& nums, int target) {
+    vector<int> mp(target + 1, -1);
+    mp[0] = 1;
+    dfs(nums, target, mp);
+    return mp[target];
   }
 };
