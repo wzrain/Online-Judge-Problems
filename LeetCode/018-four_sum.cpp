@@ -27,7 +27,9 @@ public:
     }
     for (int i = idx; i < nums.size() - n + 1; ++i) {
       if (i > idx && nums[i] == nums[i - 1]) continue;
-      if (tgt < n * nums[i]) break;
+      // pruning
+      if (tgt < n * nums[i]) break;                         // Following elements are too large(Sorted array).
+      if (tgt > nums[i] + (n - 1) * nums.back()) continue;  // This element is too small.
       tmp.push_back(nums[i]);
       dfs(nums, i + 1, res, tmp, tgt - nums[i], n - 1);
       tmp.pop_back();
