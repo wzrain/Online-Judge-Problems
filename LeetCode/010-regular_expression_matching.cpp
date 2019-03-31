@@ -1,37 +1,36 @@
 // brute force recursive solution
+// updated with memoization
 class Solution {
 public:
-  bool isMatch(string s, string p) {
-    if (p.empty()) return s.empty();
-    if (s.empty()) {
-      for (int i = 0; i < p.length(); ++i) {
-        if (p[i] != '*' && (i + 1 >= p.length() || p[i + 1] != '*')) return false;
-      }
-      return true;
-    }
-    if (s[0] == p[0] || p[0] == '.') {
-      if (p.length() <= 1 || p[1] != '*') {
-        return isMatch(s.substr(1, s.length() - 1), p.substr(1, p.length() - 1));
-      } 
-      else {
-        if (isMatch(s, p.substr(2, p.length() - 2))) return true;
-        for (int i = 0; i < s.length(); ++i) {
-          if (p[0] != '.' && s[i] != p[0]) break;
-          if (isMatch(s.substr(i + 1, s.length() - i - 1), p.substr(2, p.length() - 2))) return true;
+  bool dfs(string& s, string& p, int i, int j, vector<vector<int>>& visited) {
+    if (visited[i][j] != -1) return visited[i][j];
+    if (j == p.length()) return i == s.length();
+    if (i == s.length()) {
+      for (int k = j; k < p.length(); ++k) {
+        if (p[k] != '*' && (k + 1 >= p.length() || p[k + 1] != '*')) {
+          visited[i][j] = 0;
+          break;
         }
-        return false;
-        // this situation can be simplified as follows:
-        /*
-         * return isMatch(s, p.substr(2, p.length() - 2)) ||
-         *        isMatch(s.substr(1, s.length() - 1), p)    // The current character is matched by the a*(or .*) pattern.
-         *                                                   // Since this pattern can be ignored using the previous line,
-         *                                                   // we can just find out whether there is more to match 
-         *                                                   // by seeing where this pattern will be ignored.
-         */
-      }           
+      }
+      if (visited[i][j] == -1) visited[i][j] = 1;
     }
-    else if (p.length() > 1 && p[1] == '*') return isMatch(s, p.substr(2, p.length() - 2));
-    return false;
+    else if (s[i] == p[j] || p[j] == '.') {
+      if (j == p.length() - 1 || p[j + 1] != '*') {
+        visited[i][j] = dfs(s, p, i + 1, j + 1, visited);
+      }
+      else {
+        visited[i][j] = dfs(s, p, i, j + 2, visited) || dfs(s, p, i + 1, j, visited);
+      }
+    }
+    else if (j < p.length() - 1 && p[j + 1] == '*') {
+      visited[i][j] = dfs(s, p, i, j + 2, visited);
+    }
+    else visited[i][j] = 0;
+    return visited[i][j];
+  } 
+  bool isMatch(string s, string p) {
+    vector<vector<int>> visited(s.length() + 1, vector<int>(p.length() + 1, -1));
+    return dfs(s, p, 0, 0, visited);
   }
 };
 
