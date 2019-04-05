@@ -1,4 +1,9 @@
 // dfs solution with memoization and pruning
+// This searching progress is optimizable because unlike some of other
+// searching progresses like coin_change, every searching position
+// in this progress have limited directions to go and at the meantime,
+// these positions are highly relevant(as we can see in the pruning strategy).
+// So there might be simpler way to solve this problem, as the later solutions.
 class Solution {
 public:
   int dfs(vector<int>& nums, int idx, vector<int>& dp) {
