@@ -49,3 +49,58 @@ public:
     return flag;
   }
 };
+
+// Inorder traversal is for traversing elements in order,
+// so every elements visited should be greater than the 
+// previously visited element.
+// To avoid using long, just use the node for tracking.
+class Solution {
+public:
+  void valid(TreeNode* rt, TreeNode* &prev, bool& flag) {
+    if (!flag) return;
+    if (!rt) return;
+    valid(rt->left, prev, flag);
+    if (prev && rt->val <= prev->val) {
+      flag = false;
+      return;
+    }
+    prev = rt;
+    valid(rt->right, prev, flag);
+  }
+  bool isValidBST(TreeNode* root) {
+    bool flag = true;
+    TreeNode* prev = NULL;
+    valid(root, prev, flag);
+    return flag;
+  }
+};
+
+// iterative version
+class Solution {
+public:
+  bool isValidBST(TreeNode* root) {
+    if (!root) return true;
+    vector<TreeNode*> stk;
+    TreeNode* prev = NULL;
+    stk.push_back(root);
+    while (!stk.empty()) {
+      TreeNode* l = stk.back()->left;
+      while (l) {
+        stk.push_back(l);
+        l = l->left;
+      }
+      while (!stk.empty() && !stk.back()->right) {
+        if (prev && stk.back()->val <= prev->val) return false;
+        prev = stk.back();
+        stk.pop_back();
+      }
+      if (!stk.empty()) {
+        if (prev && stk.back()->val <= prev->val) return false;
+        prev = stk.back();
+        stk.pop_back();
+        stk.push_back(prev->right);
+      }
+    }
+    return true;
+  }
+};
