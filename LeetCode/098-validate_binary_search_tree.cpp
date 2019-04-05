@@ -21,20 +21,26 @@ public:
   void valid(TreeNode* root, bool& flag, long mn, long mx) {
     if (!flag) return;
     if (!root) return;
-    if (root->left) {
-      if (root->left->val >= root->val || root->left->val <= mn) {
-        flag = false;
-        return;
-      }
-      valid(root->left, flag, mn, root->val);
+    if (root->val >= mx || root->val <= mn) {
+      flag = false;
+      return;
     }
-    if (root->right) {
-      if (root->right->val <= root->val || root->right->val >= mx) {
-        flag = false;
-        return;
-      }
-      valid(root->right, flag, root->val, mx);
-    }
+    if (root->left) valid(root->left, flag, mn, root->val);
+    if (root->right) valid(root->right, flag, root->val, mx);
+    // if (root->left) {
+    //   if (root->left->val >= root->val || root->left->val <= mn) { // this is the mn and mx for root->left
+    //     flag = false;
+    //     return;
+    //   }
+    //   valid(root->left, flag, mn, root->val);
+    // }
+    // if (root->right) {
+    //   if (root->right->val <= root->val || root->right->val >= mx) { // this is the mn and mx for root->right
+    //     flag = false;
+    //     return;
+    //   }
+    //   valid(root->right, flag, root->val, mx);
+    // }
   }
   bool isValidBST(TreeNode* root) {
     bool flag = true;
