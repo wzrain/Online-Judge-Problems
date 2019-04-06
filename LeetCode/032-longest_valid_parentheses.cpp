@@ -18,3 +18,24 @@ public:
     return res;
   }
 };
+
+// dp solution
+class Solution {
+public:
+  int longestValidParentheses(string s) {
+    vector<int> sz(s.size() + 1, 0);
+    int res = 0;
+    for (int i = 0; i < s.length(); ++i) {
+      if (s[i] == ')' && i > 0) {
+        if (s[i - 1] == '(') sz[i + 1] = 2 + sz[i - 1];
+        else if (i - sz[i] > 0 && s[i - sz[i] - 1] == '(') { // Check whether the last character that hasn't
+                                                             // matched yet is '('. If yes, add 2 as well as
+                                                             // the length before this newly-matched '('.
+          sz[i + 1] = sz[i] + 2 + sz[i - sz[i] - 1]; 
+        }  
+      }
+      res = max(res, sz[i + 1]);
+    }
+    return res;
+  }
+};
