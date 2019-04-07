@@ -19,3 +19,30 @@ public:
     return -1;
   }
 };
+
+// xor solution
+class Solution {
+public:
+  int missingNumber(vector<int>& nums) {
+    int res = 0, st = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+      res ^= nums[i];
+      st ^= i;
+    }
+    st ^= nums.size();
+    return res ^ st; // a ^ b == c => a ^ c == b
+  }
+};
+
+class Solution {
+public:
+  int missingNumber(vector<int>& nums) {
+    int res = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+      res = res ^ i ^ nums[i]; // a ^ b ^ b == a
+                               // xor operands can change position
+    }
+    res ^= nums.size();
+    return res;
+  }
+};
