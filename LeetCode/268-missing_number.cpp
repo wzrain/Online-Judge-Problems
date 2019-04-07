@@ -46,3 +46,19 @@ public:
     return res;
   }
 };
+
+// calculate sum
+class Solution {
+public:
+  int missingNumber(vector<int>& nums) {
+    int res = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+      res += i;
+      res -= nums[i]; // to avoid overflow
+                      // If there are pluses and minuses in a series of operation,
+                      // do them alternatively. Or break pluses into minuses. (a + (a - b) / 2)
+    }
+    res += nums.size();
+    return res;
+  }
+};
