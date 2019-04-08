@@ -18,3 +18,26 @@ public:
     return dp[sl - 1][tl - 1];
   }
 };
+
+// Since dp[i][j] only rely on dp[i - 1][j] and dp[i - 1][j - 1], which are
+// dp[is][js] where is <= i and js <= j, so it's ok to swap the loop order.
+// Note that this is not contradictory to the conclusion we drawn in coin change
+// problem. The following loop order, where the dp array is one dimension, is
+// unchangable. 
+class Solution {
+public:
+  int numDistinct(string s, string t) {
+    if (s.empty() || t.empty()) return 0;
+    int sl = s.length(), tl = t.length();
+    vector<unsigned int> dp(tl, 0);
+    for (int i = 0; i < sl; ++i) {
+      for (int j = tl - 1; j >= 0; --j) {
+        if (s[i] == t[j]) {
+          if (j == 0) dp[j]++;
+          else if (i > 0) dp[j] += dp[j - 1];
+        }
+      }
+    }
+    return dp[tl - 1];
+  }
+};
