@@ -41,3 +41,23 @@ public:
     return dp[tl - 1];
   }
 };
+
+// recursive dp with memoization
+class Solution {
+public:
+  int dfs(string& s, string& t, int i, int j, vector<vector<int>>& dp) {
+    if (i == -1 || j == -1) return 0;
+    if (dp[i][j] != -1) return dp[i][j];
+    dp[i][j] = dfs(s, t, i - 1, j, dp);
+    if (s[i] == t[j]) {
+      if (j == 0) dp[i][j]++;
+      else dp[i][j] += dfs(s, t, i - 1, j - 1, dp);
+    }
+    return dp[i][j];
+  }
+  int numDistinct(string s, string t) {
+    int sl = s.length(), tl = t.length();
+    vector<vector<int>> dp(sl, vector<int>(tl, -1));
+    return dfs(s, t, sl - 1, tl - 1, dp);
+  }
+};
