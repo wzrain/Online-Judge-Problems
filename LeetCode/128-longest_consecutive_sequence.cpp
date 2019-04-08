@@ -51,3 +51,26 @@ public:
     return res;
   }
 };
+
+// Instead of recording the bound of sequences, record the length of each consequence.
+// This borrows the idea of the union-find set. Here if two elements are in one sequence,
+// They should be in the same union-find set. And since every update happens in the bound
+// of sequences, we set the father as two bound elements and update their values.
+// The intuition of the union-find set here is that "consecutive" means "grouped".
+class Solution {
+public:
+  int longestConsecutive(vector<int>& nums) {
+    unordered_map<int, int> st;
+    int res = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+      if (st.find(nums[i]) != st.end()) continue;
+      int l = nums[i], r = nums[i];
+      st[nums[i]] = 1;
+      if (st.find(nums[i] + 1) != st.end()) r = st[nums[i] + 1] + nums[i];
+      if (st.find(nums[i] - 1) != st.end()) l = nums[i] - st[nums[i] - 1];
+      st[l] = st[r] = r - l + 1;
+      res = max(res, st[l]);
+    }
+    return res;
+  }
+};
