@@ -74,3 +74,29 @@ public:
     return res;
   }
 };
+
+// The annoying thing about "consecutive" is that when we encounter an element
+// in the vector, we don't know whether it will be connected(adjacent) with any
+// later elements that we haven't seen before. So we can convert the vector into
+// a set since there's no additional requirement for duplicate elements.
+// Then there are some similar thoughts from the battleship problem. Bounds matter.
+// To ensure every "consecutive" sequence only be visited once, we only visit it
+// when we encounter its "head"(the smallest element).
+class Solution {
+public:
+  int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> st;
+    int res = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+      if (st.find(nums[i]) != st.end()) continue;
+      st.insert(nums[i]);
+    }
+    for (int i = 0; i < nums.size(); ++i) {
+      if (st.find(nums[i] - 1) != st.end()) continue;
+      int tmp = nums[i] + 1;
+      while (st.find(tmp) != st.end()) tmp++;
+      res = max(tmp - nums[i], res);
+    }
+    return res;
+  }
+};
