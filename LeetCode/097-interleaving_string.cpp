@@ -40,6 +40,15 @@ public:
 };
 
 // bfs solution
+// The good thing about bfs here is that we care more about i + j, which is 
+// the index of s3 because there has to be at least one match to interleave
+// to s3.substr(i + j) to continue search. And every time bfs add one possible
+// character, which is exactly add one to the s3 index. 
+// Therefore the searching progress is going along the diagonal direction, 
+// which could stop early if none of the interleaving in an anti-diagonal line
+// is capable of interleave to s3's substring. While the dp solution is going 
+// line by line, so every time it has to go through almost every situation
+// to draw the conclusion.
 class Solution {
 public:
   struct hashFunc {
