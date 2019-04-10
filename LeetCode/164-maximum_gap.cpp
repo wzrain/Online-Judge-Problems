@@ -36,3 +36,31 @@ public:
     return res;
   }
 };
+
+// radix sort solution
+// Sort according to every 4 bits and get "partly" correct order every time
+class Solution {
+public:
+  int maximumGap(vector<int>& nums) {
+    if (nums.size() < 2) return 0;
+    vector<vector<int>> radix(16);
+    for (int b = 0; b < 32; b += 4) {
+      for (int i = 0; i < nums.size(); ++i) {
+        int idx = (nums[i] >> b) & 15;
+        radix[idx].push_back(nums[i]);
+      }
+      int ni = 0;
+      for (int i = 0; i < 16; ++i) {
+        for (int j = 0; j < radix[i].size(); ++j) {
+          nums[ni++] = radix[i][j];
+        }
+        radix[i].clear();
+      }
+    }
+    int res = 0;
+    for (int i = 1; i < nums.size(); ++i) {
+      res = max(res, nums[i] - nums[i - 1]);
+    }
+    return res;
+  }
+};
