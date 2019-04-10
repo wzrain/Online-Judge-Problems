@@ -73,3 +73,41 @@ public:
     return res;
   }
 };
+
+// Morris traversal
+// In postorder traversal, when a node's left-subtree traversal finished,
+// which means the right-most elements points back to the node, the right
+// path hasn't been actually added to the result.
+class Solution {
+public:
+  vector<int> postorderTraversal(TreeNode* root) {
+    vector<int> res;
+    TreeNode* dummy = new TreeNode(0), *cur = dummy;
+    dummy->left = root;
+    while (cur) {
+      if (!cur->left) cur = cur->right;
+      else {
+        TreeNode* tmp = cur->left;
+        while (tmp->right && tmp->right != cur) tmp = tmp->right;
+        if (!tmp->right) {
+          tmp->right = cur;
+          cur = cur->left;
+        }
+        else {
+          tmp->right = NULL;
+          tmp = cur->left;
+          res.push_back(tmp->val);
+          int cnt = 1;
+          while (tmp->right) {
+            tmp = tmp->right;
+            res.push_back(tmp->val);
+            cnt++;
+          }
+          reverse(res.end() - cnt, res.end());
+          cur = cur->right;
+        }
+      }
+    }
+    return res;
+  }
+};
