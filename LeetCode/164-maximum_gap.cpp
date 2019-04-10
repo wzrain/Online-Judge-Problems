@@ -43,19 +43,21 @@ class Solution {
 public:
   int maximumGap(vector<int>& nums) {
     if (nums.size() < 2) return 0;
-    vector<vector<int>> radix(16);
+    vector<int> radix(16);
+    vector<int> tmp(nums.size());
     for (int b = 0; b < 32; b += 4) {
+      for (int ix = 0; ix < 16; ++ix) radix[ix] = 0;
       for (int i = 0; i < nums.size(); ++i) {
-        int idx = (nums[i] >> b) & 15;
-        radix[idx].push_back(nums[i]);
+        radix[(nums[i] >> b) & 15]++;
       }
-      int ni = 0;
-      for (int i = 0; i < 16; ++i) {
-        for (int j = 0; j < radix[i].size(); ++j) {
-          nums[ni++] = radix[i][j];
-        }
-        radix[i].clear();
+      // Instead of saving the results in an actual bucket, just save the number
+      // of elements in each bucket. Then it's easy to get the index range of elements
+      // in the new order in each bucket.
+      for (int ix = 1; ix < 16; ++ix) radix[ix] += radix[ix - 1];
+      for (int i = nums.size() - 1; i >= 0; --i) {
+        tmp[--radix[(nums[i] >> b) & 15]] = nums[i];
       }
+      nums = tmp;
     }
     int res = 0;
     for (int i = 1; i < nums.size(); ++i) {
