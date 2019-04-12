@@ -30,3 +30,21 @@ public:
     return res;
   }
 };
+
+// dfs to calculate level
+class Solution {
+public:
+  void level(TreeNode* cur, vector<vector<int>>& res, int l) {
+    if (!cur) return;
+    if (l >= res.size()) res.push_back({cur->val});
+    else res[l].push_back(cur->val);
+    level(cur->left, res, l + 1);
+    level(cur->right, res, l + 1);
+  }
+  vector<vector<int>> levelOrderBottom(TreeNode* root) {
+    vector<vector<int>> res;
+    level(root, res, 0);
+    reverse(res.begin(), res.end());
+    return res;
+  }
+};
