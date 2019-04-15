@@ -32,3 +32,38 @@ public:
     return res;
   }
 };
+
+// use deque
+class Solution {
+public:
+  vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+    vector<vector<int>> res;
+    if (!root) return res;
+    deque<TreeNode*> q;
+    q.push_back(root);
+    int par = 1;
+    while (!q.empty()) {
+      vector<int> tmp;
+      int sz = q.size();
+      for (int s = 0; s < sz; ++s) {
+        TreeNode* cur;
+        if (par) {
+          cur = q.front();
+          q.pop_front();
+          if (cur->left) q.push_back(cur->left);
+          if (cur->right) q.push_back(cur->right);
+        }
+        else {
+          cur = q.back();
+          q.pop_back();
+          if (cur->right) q.push_front(cur->right);
+          if (cur->left) q.push_front(cur->left);
+        }
+        tmp.push_back(cur->val);
+      }
+      par ^= 1;
+      res.push_back(tmp);
+    }
+    return res;
+  }
+};
