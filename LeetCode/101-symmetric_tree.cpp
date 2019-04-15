@@ -38,3 +38,18 @@ public:
     return true;
   }
 };
+
+// recursive solution
+// No need to do level order traversal when checking symmetry.
+class Solution {
+public:
+  bool sym(TreeNode* t1, TreeNode* t2) {
+    if (!t1 && !t2) return true;
+    if ((!t1 && t2) || (t1 && !t2)) return false;
+    return t1->val == t2->val && sym(t1->left, t2->right) && sym(t1->right, t2->left);
+  }
+  bool isSymmetric(TreeNode* root) {
+    if (!root) return true;
+    return sym(root->left, root->right);
+  }
+};
