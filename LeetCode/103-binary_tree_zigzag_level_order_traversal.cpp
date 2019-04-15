@@ -34,6 +34,9 @@ public:
 };
 
 // use deque
+// Here a deque is representing two stacks. This zig-zag process
+// is actually a FILO problem: the sons of a first visited node in
+// the previous level will be last visited in the current level.
 class Solution {
 public:
   vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
