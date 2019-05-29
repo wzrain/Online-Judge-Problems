@@ -32,3 +32,21 @@ public:
     return dp[len / 2];
   }
 };
+
+// Sort by the "opportunity cost". Let every people who was arranged to place A pay less price
+// than they were arranged to B.
+class Solution {
+public:
+  int twoCitySchedCost(vector<vector<int>>& costs) {
+    auto cmp = [](vector<int>& v1, vector<int>& v2) {
+      return v1[0] - v1[1] < v2[0] - v2[1];
+    };
+    sort(costs.begin(), costs.end(), cmp);
+    int sum = 0, n = costs.size();
+    for (int i = 0; i < n; ++i) {
+      if (i < n / 2) sum += costs[i][0];
+      else sum += costs[i][1];
+    }
+    return sum;
+  }
+};
