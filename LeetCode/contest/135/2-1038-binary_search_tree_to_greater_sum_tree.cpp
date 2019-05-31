@@ -57,3 +57,34 @@ public:
     return root;
   }
 };
+
+// Morris traversal
+class Solution {
+public:
+  TreeNode* bstToGst(TreeNode* root) {
+    TreeNode* cur = root;
+    int sum = 0;
+    while (cur) {
+      if (!cur->right) {
+        cur->val += sum;
+        sum = cur->val;
+        cur = cur->left;
+      }
+      else {
+        TreeNode* tmp = cur->right;
+        while (tmp->left && tmp->left != cur) tmp = tmp->left;
+        if (tmp->left == cur) {
+          tmp->left = NULL;
+          cur->val += sum;
+          sum = cur->val;
+          cur = cur->left;
+        }
+        else {
+          tmp->left = cur;
+          cur = cur->right;
+        }
+      }
+    }
+    return root;
+  }
+};
