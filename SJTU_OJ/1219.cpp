@@ -55,16 +55,18 @@ int bisearch(int l, int r, int t) {
 
 void mergeTwoArr(int l, int mid, int r) {
   int m1 = l, m2 = mid + 1, idx = 0;
-  //while (m1 <= mid && m2 <)
+  int cur = l;
   while (m1 <= mid && m2 <= r) {
     if (h[m1] <= h[m2]) {
       tmp[idx++] = h[m1++];
     }
     else {
-      if (h[mid] > 2 * h[m2]) {
-        int ix = bisearch(m1, mid, 2 * h[m2]);
-        cnt += (mid - ix + 1);
-      }
+      // if (h[mid] > 2 * h[m2]) {
+      //   int ix = bisearch(m1, mid, 2 * h[m2]);
+      //   cnt += (mid - ix + 1);
+      // }
+      while (cur <= mid && h[cur] <= 2 * h[m2]) cur++;
+      cnt += (mid - cur + 1);
       tmp[idx++] = h[m2++];
     }
   }
@@ -113,7 +115,7 @@ void mergeSortSol() {
 
 int main() {
   init();
-  //mergeSortSol();
-  segTreeSol();
+  mergeSortSol();
+  // segTreeSol();
   return 0;
 }
