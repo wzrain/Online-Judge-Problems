@@ -41,10 +41,23 @@ void mergeTwoArr(int l, int r) {
   while (m1 <= mid && m2 <= r) {
     if (h[m1] <= h[m2]) {
       tmp[idx++] = h[m1++];
+      cnt += (m2 - mid - 1);   // Essentially for each element in the left subarray,
+                               // we need to find the first element in the right 
+                               // that is not smaller than it. To do this, we can use
+                               // a separate pointer scanning from left to right in the
+                               // right subarray. The reason is that the left subarray
+                               // is monotonously increasing, so the "first non-smaller
+                               // element" in the right should also be always larger.
+                               // Here it just happens that the m2 pointer could play that
+                               // role when the merge goes on.
+                               // If we update the counter in the else, we actually are 
+                               // finding the first element in the left that is larger for
+                               // each element in the right. So now m1 could play the role
+                               // of that pointer.
     }
     else {
       tmp[idx++] = h[m2++];
-      cnt += (mid - m1 + 1);
+      // cnt += (mid - m1 + 1);
     }
   }
   if (m1 > mid) {
@@ -55,7 +68,7 @@ void mergeTwoArr(int l, int r) {
   if (m2 > r) {
     for (int i = m1; i <= mid; ++i) {
       tmp[idx++] = h[i];
-      //cnt += (r - mid);
+      cnt += (m2 - mid - 1);
     }
   }
   for (int i = l; i <= r; ++i) {
