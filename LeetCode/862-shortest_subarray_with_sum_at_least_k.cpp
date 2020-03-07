@@ -1,4 +1,11 @@
 // O(nlogn) solution
+// The idea is for each sum[i], find the nearest sum[j] with
+// sum[j] - sum[i] >= K and j > i. 
+// We could start from the smallest sum, so that the eliminated
+// sums will never be counted later, thus we could use one more
+// pointer to record current potential sums. Use a set to record
+// the index of possible sum and search the upper bound of the 
+// current index.
 class Solution {
 public:
     int shortestSubarray(vector<int>& A, int K) {
