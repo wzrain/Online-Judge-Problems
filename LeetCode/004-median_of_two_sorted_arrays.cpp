@@ -67,3 +67,52 @@ public:
     return (maxl + minr) / 2.0;
   }
 };
+
+
+// O(log(max(m, n)))
+// Do binary search on the larger array to find the last element that is no larger than the median.
+// Every time there are two separators, one of which is the largest element in the left part. The
+// smallest right part element is one of the (at most) two elements in the right after the two separator. 
+// If the left largest is larger than the right smallest, there must be one separator larger than the right
+// element in the other array. So just move this separator to the left and move th other one right.
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size(), m = nums2.size(), md = (n + m + 1) / 2;
+        if (n < m) return findMedianSortedArrays(nums2, nums1);
+        int l1 = 0, r1 = n - 1, idx = -1;
+        while (l1 < r1) {
+            int m1 = (l1 + r1) / 2;
+            int m2 = md - m1 - 2;
+            if (m2 < 0) {
+                r1 = m1;
+                continue;
+            }
+            if (m2 >= m) {
+                l1 = m1 + 1;
+                continue;
+            }
+            int mxl = max(nums1[m1], nums2[m2]);
+            int mnr = min((m1 < n - 1 ? nums1[m1 + 1] : INT_MAX), (m2 < m - 1 ? nums2[m2 + 1] : INT_MAX));
+            if (mxl > mnr) {
+                if (nums1[m1] > nums2[m2]) {
+                    r1 = m1;
+                }
+                else if (nums1[m1] < nums2[m2]) {
+                    l1 = m1 + 1;
+                }
+            }
+            else {
+                // idx = m1;
+                // break;
+                r1 = m1;
+            }
+        }
+        if (idx < 0) idx = l1;
+        int i2 = md - idx - 2;
+        int mxl = max(nums1[idx], (i2 < 0 ? INT_MIN : nums2[i2]));
+        int mnr = min((idx < n - 1 ? nums1[idx + 1] : INT_MAX), (i2 < m - 1 ? nums2[i2 + 1] : INT_MAX));
+        if ((m + n) & 1) return mxl;
+        return (mxl + mnr) / 2.0;
+    }
+};
