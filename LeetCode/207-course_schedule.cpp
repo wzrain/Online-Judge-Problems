@@ -38,3 +38,40 @@ public:
         return true;
     }
 };
+
+// topological sort (bfs)
+// Use in degrees to imitate the process of taking courses. When there
+// are courses with in degree of 0, we can take that course, and its
+// suffices' in degree can be decremented. This could be implemented
+// via bfs, which is basically emulating some kind of "sequences".
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> grph(numCourses);
+        vector<int> degree(numCourses, 0);
+        for (int i = 0; i < prerequisites.size(); ++i) {
+            grph[prerequisites[i][1]].push_back(prerequisites[i][0]);
+            degree[prerequisites[i][0]]++;
+        }
+        queue<int> q;
+        int cnt = 0;
+        for (int i = 0; i < numCourses; ++i) {
+            if (!degree[i]) {
+                q.push(i);
+                cnt++;
+            }
+        }
+        while (!q.empty()) {
+            int cur = q.front();
+            q.pop();
+            for (int i = 0; i < grph[cur].size(); ++i) {
+                int nx = grph[cur][i];
+                if (!(--degree[nx])) {
+                    q.push(nx);
+                    cnt++;
+                }
+            }
+        }
+        return cnt == numCourses;
+    }
+};
