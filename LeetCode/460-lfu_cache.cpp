@@ -1,3 +1,11 @@
+// The idea is to construct a linked list and save the LFU element
+// at the head of the list to make the remove operation O(1). For
+// adjustment, we need to find the most recent used element for a
+// certain frequency and insert the accessed element after it. 
+// So when adding a key (node), we need to insert it after the most
+// recent used element of frequency 1 or head. Update of the list
+// requires checking whether the node is the most recent used element
+// of the previous frequency, and where to insert.
 class LFUCache {
 private:
     struct Node {
@@ -6,6 +14,7 @@ private:
         Node* next;
         Node(int k = 0, int v = 0) : key(k), value(v), prev(NULL), next(NULL) {}
     };
+    // <key, <Node*, frequency>>
     unordered_map<int, pair<Node*, int>> mp;
     
     // Save the last node for each frequency.
@@ -59,6 +68,7 @@ private:
                     updateNode(cur, preidx, cand);
                 }
                 else {
+                    // no need to change the list, just update the frequency
                     vec[preidx] = NULL;
                     vec[curidx] = cur;
                 }
