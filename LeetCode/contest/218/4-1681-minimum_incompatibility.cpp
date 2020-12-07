@@ -64,3 +64,69 @@ public:
         }
     }
 };
+
+// dp solution
+// The idea is to find subproblems with bit masks. 
+// Bitmasks can be traversed via a single for loop.
+// When a submask is being examined, just subtract
+// to find the complement bitmask, which correspond
+// to the two subparts of the problem.
+// We need to first calculate the situations with
+// only one group, since the for loop does not go
+// through the bitmasks in the order of increasing
+// problem scale (e.g 0111b < 1000b).
+// The submask traversal can be optimized into O(3^N).
+// When finding a submask of mk, just find every
+// number p that is smaller than mk and p & mk == mk.
+// So we could use (p - 1) & mk to find the next submask.
+// Here every bit is either included in both mk and p, or
+// only included in mk, or not included in mk. So there
+// are 3^n different combinations for n bits.
+class Solution {
+private:
+    int countBits(int mask) {
+        int res = 0;
+        while (mask) {
+            res += (mask & 1);
+            mask >>= 1;
+        }
+        return res;
+    }
+public:
+    int minimumIncompatibility(vector<int>& nums, int k) {
+        int n = nums.size(), m = n / k;
+        unordered_map<int, int> incomp;
+        vector<int> dp((1 << n), INT_MAX);
+        dp[0] = 0;
+        for (int mk = 0; mk < (1 << n); ++mk) {
+            if (countBits(mk) != m) continue;
+            int mx = INT_MIN, mn = INT_MAX;
+            // unordered_set<int> visited;
+            int visited = 0;
+            bool good = true;
+            for (int i = 0; i < n; ++i) {
+                if (mk & (1 << i)) {
+                    // if (visited.find(nums[i]) != visited.end()) {
+                    if (visited & (1 << nums[i])) {
+                        good = false;
+                        break;
+                    }
+                    // visited.insert(nums[i]);
+                    visited |= (1 << nums[i]);
+                    mx = max(nums[i], mx);
+                    mn = min(nums[i], mn);
+                }
+            }
+            if (good) dp[mk] = mx - mn;
+        }
+        for (int mk = 0; mk < (1 << n); ++mk) {
+            if (countBits(mk) % m) continue;
+            for (int sm = mk; sm; sm = (sm - 1) & mk) {
+                if (countBits(sm) != m) continue; // necessary optimization
+                if (dp[sm] == INT_MAX || dp[mk - sm] == INT_MAX) continue;
+                dp[mk] = min(dp[mk], dp[sm] + dp[mk - sm]);
+            }
+        }
+        return dp[(1 << n) - 1] == INT_MAX ? -1 : dp[(1 << n) - 1];
+    }
+};
