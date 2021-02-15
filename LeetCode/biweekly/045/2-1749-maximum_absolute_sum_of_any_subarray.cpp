@@ -31,7 +31,7 @@ public:
     int maxAbsoluteSum(vector<int>& nums) {
         int n = nums.size();
         int prefix = 0;
-        int mx = 0, mn = 0, res = 0;
+        int mx = 0, mn = 0;
         for (int i = 0; i < n; ++i) {
             prefix += nums[i];
             mx = max(mx, prefix);
@@ -39,5 +39,22 @@ public:
         }
         
         return mx - mn;
+    }
+};
+
+// Another way of thinking is to treat absolute value as max(max value, -min value), so we can just find the max/min 
+// subarrays, which can be done in O(n) time.
+class Solution {
+public:
+    int maxAbsoluteSum(vector<int>& nums) {
+        int n = nums.size();
+        int mx = 0, mn = 0, res = 0;
+        for (int i = 0; i < n; ++i) {
+            mx = max(0, mx + nums[i]);
+            mn = min(0, mn + nums[i]);
+            res = max(res, max(mx, -mn));
+        }
+        
+        return res;
     }
 };
