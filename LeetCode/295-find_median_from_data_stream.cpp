@@ -97,3 +97,9 @@ private:
  * obj->addNum(num);
  * double param_2 = obj->findMedian();
  */
+
+ // follow-ups:
+ // If all numbers are between 0-100, just use vectors to store count, and traverse the vector to find the 
+ // median (still constant complexity). If 99% of the numbers are between 0-100, that means the median is 
+ // surely between 0-100 (so this is also applicable for any percentage more than 50%), just track the counter 
+ // for numbers less than 0 or larger than 100 respectively.
