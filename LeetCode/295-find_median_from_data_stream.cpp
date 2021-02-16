@@ -51,6 +51,46 @@ private:
     }
 };
 
+// Just use two priority queues to track smaller and larger values. The top of the two queues are candidates 
+// for the median. The smaller queue always contain n / 2 values.
+class MedianFinder {
+public:
+    /** initialize your data structure here. */
+    MedianFinder() {
+        sz = 0;
+    }
+    
+    void addNum(int num) {
+        if (sz & 1) {
+            // can directly push to large first, if num <= large.top(), it will be popped to small anyway
+            if (num <= large.top()) small.push(num);
+            else {
+                large.push(num);
+                small.push(large.top());
+                large.pop();
+            }
+        }
+        else {
+            if (small.empty() || num >= small.top()) large.push(num);
+            else {
+                small.push(num);
+                large.push(small.top());
+                small.pop();
+            }
+        }
+        sz++;
+    }
+    
+    double findMedian() {
+        if (sz & 1) return large.top();
+        return (small.top() + large.top()) / 2.0;
+    }
+private:
+    priority_queue<int> small;
+    priority_queue<int, std::vector<int>, std::greater<int>> large;
+    int sz;
+};
+
 /**
  * Your MedianFinder object will be instantiated and called as such:
  * MedianFinder* obj = new MedianFinder();
