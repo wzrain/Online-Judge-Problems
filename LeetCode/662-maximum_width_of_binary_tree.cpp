@@ -19,6 +19,9 @@ public:
         while (!q.empty()) {
             int sz = q.size();
             int mn = sz, mx = 0;
+            // Instead of recording absolute indices, store relative indices to prevent overflow.
+            // Note that when we offsetted one layer, the relative distances still hold, which 
+            // still support idx * 2 calculation for next layer's indices.
             int offset = -1;
             while (sz--) {
                 int idx = q.front().first;
