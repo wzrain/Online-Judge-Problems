@@ -68,3 +68,45 @@ public:
     return sqr;
   }
 };
+
+// updated monostack solution
+// No need to record the previous length corresponding to each element in the stack.
+// When an element is popped out of the stack, it means it's the lowest element from
+// the position next to the previous element of the stack (or 0 if the stack is empty) 
+// to the position of the current element that is to be put inside the stack (or the
+// row length for the post-processing).
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if (matrix.empty()) return 0;
+        int r = matrix.size(), c = matrix[0].size();
+        vector<vector<int>> colsum(r + 1, vector<int>(c, 0));
+        for (int i = 0; i < r; ++i) {
+            for (int j = 0; j < c; ++j) {
+                colsum[i + 1][j] = (matrix[i][j] - '0');
+                if (colsum[i + 1][j]) colsum[i + 1][j] += colsum[i][j];
+            }
+        }
+        
+        int res = 0;
+        for (int i = 0; i < r; ++i) {
+            vector<int> stk;
+            for (int j = 0; j < c; ++j) {
+                int curh = colsum[i + 1][j];
+                while (!stk.empty() && colsum[i + 1][stk.back()] >= curh) {
+                    int curj = stk.back();
+                    stk.pop_back();
+                    res = max(res, colsum[i + 1][curj] * (j - (stk.empty() ? 0 : (stk.back() + 1))));
+                }
+                stk.push_back(j);
+            }
+            while (!stk.empty()) {
+                int curj = stk.back();
+                stk.pop_back();
+                int startj = stk.empty() ? 0 : (stk.back() + 1);
+                res = max(res, colsum[i + 1][curj] * (c - startj));
+            }
+        }
+        return res;
+    }
+};
