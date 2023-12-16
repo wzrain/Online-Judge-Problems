@@ -47,3 +47,46 @@ public:
         return dummy->next;
     }
 };
+
+// O(1) space. Stitching the original and the copied linked list together and no hash map is needed.
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        Node* p = head;
+        Node* dummy = new Node(0);
+        Node* np = dummy;
+        while (p) {
+            Node* pcopy = new Node(p->val);
+            np->next = pcopy;
+            np = pcopy;
+            p = p->next;
+        }
+        p = head;
+        np = dummy;
+        Node* npnxt = dummy->next;
+        while (p) {
+            Node* pnxt = p->next;
+            np->next = p;
+            p->next = npnxt;
+            p = pnxt;
+            np = npnxt;
+            npnxt = npnxt->next;
+        }
+        p = dummy->next;
+        while (p) {
+            if (p->random) {
+                p->next->random = p->random->next;
+            }
+            p = p->next->next;
+        }
+        p = dummy->next;
+        np = dummy;
+        while (p) {
+            np->next = p->next;
+            if (p->next) p->next = p->next->next;
+            np = np->next;
+            p = p->next;
+        }
+        return dummy->next;
+    }
+};
